@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# 创建build目录
+echo -e "\e[1;34mCreating the build directory if it doesn't exist\e[0m"
+echo ""
+mkdir -p build
+echo -e "\e[1;34m----------------------------------------\e[0m"
+
 # 删除build目录的所有内容
 echo -e "\e[1;34mDeleting all contents in the build directory\e[0m"
 echo ""

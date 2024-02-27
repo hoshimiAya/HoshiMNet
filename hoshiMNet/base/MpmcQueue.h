@@ -15,13 +15,43 @@ template <typename T>
 class MpmcQueue
 {
 public:
-    explicit MpmcQueue(size_t maxSize);
-    ~MpmcQueue();
+    explicit MpmcQueue(size_t maxSize)
+        : maxSize_(maxSize) {}
 
-    void push(T&& value);
-    void pop(T& value);
-    size_t size() const;
-    size_t maxSize() const;
+    ~MpmcQueue() {}
+
+    void push(T&& value)
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+        pushCv_.wait(lock, [this]
+        {
+            return queue_.size() < maxSize_;
+        });
+        queue_.push_back(std::move(value));
+        popCv_.notify_one();
+    }
+
+    void pop(T& value)
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+        popCv_.wait(lock, [this]
+        {
+            return !queue_.empty();
+        });
+        value = std::move(queue_.front());
+        queue_.pop_front();
+        pushCv_.notify_one();
+    }
+
+    size_t size() const
+    {
+        return queue_.size();
+    }
+
+    size_t maxSize() const
+    {
+        return maxSize_;
+    }
 
 private:
     std::mutex mutex_;

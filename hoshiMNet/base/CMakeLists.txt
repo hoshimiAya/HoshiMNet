@@ -1,6 +1,5 @@
 set(SRCS
     Log.cpp
-    MpmcQueue.cpp
 )
 
 add_library(hoshiMNetBase ${SRCS})

@@ -6,7 +6,7 @@ namespace hoshiMNet
 namespace base
 {
 
-template<class T>
+template<typename T>
 class Singleton
 {
 public:

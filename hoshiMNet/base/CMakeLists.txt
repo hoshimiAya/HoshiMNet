@@ -1,8 +1,10 @@
 set(SRCS
     Log.cpp
+    ThreadPool.cpp
 )
 
 add_library(hoshiMNetBase ${SRCS})
+target_link_libraries(hoshiMNetBase pthread)
 
 install(TARGETS hoshiMNetBase DESTINATION lib)
 

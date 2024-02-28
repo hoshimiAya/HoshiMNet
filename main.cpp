@@ -1,15 +1,17 @@
 
+#include <chrono>
 #include <condition_variable>
+#include <thread>
 #include <iostream>
 
 #include "hoshiMNet/base/Log.h"
-
 #include "hoshiMNet/base/MpmcQueue.h"
+#include "hoshiMNet/base/ThreadPool.h"
 
 void testLog()
 {
     hoshiMNet::Log::instance().log("Hello, spdlog!");
-    LOG("Hello, spdlog!");
+    LOG_Info("Hello, spdlog!");
     LOG_WARN("Hello, spdlog!");
     LOG_ERROR("Hello, spdlog!");
 }
@@ -35,9 +37,30 @@ void testMpmcQueue()
     }
 }
 
+void testThreadPool()
+{
+    hoshiMNet::base::ThreadPool pool(2, 10);
+    pool.start();
+
+    std::function<void(int)> task = [](int i)
+    {
+        // print thread
+        std::cout << "thread id: " << std::this_thread::get_id() << ", task: " << i << std::endl;
+    };
+
+    for (int i = 0; i < 100; ++i)
+    {
+        pool.post(std::bind(task, i));
+        std::cout << "post: " << i << std::endl;
+    }
+
+    pool.waitDone();
+}
+
 int main()
 {
-    testLog();
-    testMpmcQueue();
+    // testLog();
+    // testMpmcQueue();
+    testThreadPool();
     return 0;
 }

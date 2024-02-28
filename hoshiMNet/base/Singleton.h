@@ -20,8 +20,8 @@ protected:
     virtual ~Singleton() {}
 private:
     Singleton(const Singleton&) = delete;
-    Singleton& operator=(const Singleton&) = delete;
     Singleton(const Singleton&&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
     Singleton& operator=(const Singleton&&) = delete;
 };
 

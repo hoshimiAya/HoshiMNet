@@ -43,15 +43,9 @@ public:
         pushCv_.notify_one();
     }
 
-    size_t size() const
-    {
-        return queue_.size();
-    }
-
-    size_t maxSize() const
-    {
-        return maxSize_;
-    }
+    size_t size() const { return queue_.size(); }
+    size_t maxSize() const { return maxSize_; }
+    bool empty() const { return queue_.empty(); }
 
 private:
     std::mutex mutex_;

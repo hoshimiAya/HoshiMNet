@@ -5,7 +5,7 @@
 
 #include <string>
 
-#define LOG(msg) hoshiMNet::Log::instance().log(msg)
+#define LOG_Info(msg) hoshiMNet::Log::instance().log(msg)
 #define LOG_WARN(msg) hoshiMNet::Log::instance().log(msg, 1)
 #define LOG_ERROR(msg) hoshiMNet::Log::instance().log(msg, 2)
 

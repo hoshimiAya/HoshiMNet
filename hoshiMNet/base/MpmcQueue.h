@@ -16,7 +16,8 @@ class MpmcQueue
 {
 public:
     explicit MpmcQueue(size_t maxSize)
-        : maxSize_(maxSize) {}
+        : maxSize_(maxSize)
+        , stop_(false) {}
 
     ~MpmcQueue() {}
 
@@ -31,16 +32,46 @@ public:
         popCv_.notify_one();
     }
 
+    bool pushFor(T&& value, std::chrono::milliseconds timeout)
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+        bool ret = pushCv_.wait_for(lock, timeout, [this]
+        {
+            return queue_.size() < maxSize_;
+        });
+
+        if (ret == false)
+        {
+            return false;
+        }
+
+        queue_.push_back(std::move(value));
+        popCv_.notify_one();
+        return true;
+    }
+
     void pop(T& value)
     {
         std::unique_lock<std::mutex> lock(mutex_);
         popCv_.wait(lock, [this]
         {
-            return !queue_.empty();
+            return !queue_.empty() || stop_;
         });
+        if (stop_)
+        {
+            return;
+        }
+        
         value = std::move(queue_.front());
         queue_.pop_front();
         pushCv_.notify_one();
+    }
+
+    void stop()
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+        stop_ = true;
+        popCv_.notify_all();
     }
 
     size_t size() const { return queue_.size(); }
@@ -52,7 +83,8 @@ private:
     std::condition_variable pushCv_;
     std::condition_variable popCv_;
     std::deque<T> queue_;
-    std::atomic<size_t> maxSize_;
+    size_t maxSize_;
+    bool stop_;
 };
 
 } // namespace base

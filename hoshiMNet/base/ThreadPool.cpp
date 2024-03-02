@@ -27,20 +27,21 @@ void ThreadPool::start()
         {
             while (!stop_.load())
             {
-                Task task;
+                                Task task;
                 queue_.pop(task);
                 if (task)
                 {
                     task();
                 }
             }
-        });
+                    });
     }
 }
 
 void ThreadPool::stop()
 {
     stop_.exchange(true);
+    queue_.stop();
     for (auto& thread : threads_)
     {
         thread.join();

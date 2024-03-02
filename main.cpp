@@ -11,7 +11,7 @@
 void testLog()
 {
     hoshiMNet::Log::instance().log("Hello, spdlog!");
-    LOG_Info("Hello, spdlog!");
+    LOG_INFO("Hello, spdlog!");
     LOG_WARN("Hello, spdlog!");
     LOG_ERROR("Hello, spdlog!");
 }
@@ -45,16 +45,18 @@ void testThreadPool()
     std::function<void(int)> task = [](int i)
     {
         // print thread
-        std::cout << "thread id: " << std::this_thread::get_id() << ", task: " << i << std::endl;
+        std::string str = "thread id: " + std::to_string(std::hash<std::thread::id>{}(std::this_thread::get_id())) + ", task: " + std::to_string(i);
+        LOG_INFO(str);
     };
 
     for (int i = 0; i < 100; ++i)
     {
         pool.post(std::bind(task, i));
-        std::cout << "post: " << i << std::endl;
+        std::string str = "post: " + std::to_string(i);
+        LOG_INFO(str);
     }
 
-    pool.waitDone();
+    pool.stop();
 }
 
 int main()

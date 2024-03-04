@@ -21,7 +21,7 @@ public:
     using Task = std::function<void()>;
 
 public:
-    explicit ThreadPool(size_t threadNumber, size_t queueMaxSize);
+    ThreadPool(size_t threadNumber, size_t queueMaxSize);
     ~ThreadPool();
 
     void start();

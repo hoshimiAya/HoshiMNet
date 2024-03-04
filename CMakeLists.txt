@@ -29,3 +29,4 @@ add_subdirectory(hoshiMNet)
 add_executable(app main.cpp)
 
 target_link_libraries(app hoshiMNetBase)
+target_link_libraries(app hoshiMNetNet)

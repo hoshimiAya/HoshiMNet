@@ -7,6 +7,7 @@
 #include "hoshiMNet/base/Log.h"
 #include "hoshiMNet/base/MpmcQueue.h"
 #include "hoshiMNet/base/ThreadPool.h"
+#include "hoshiMNet/net/InetAddress.h"
 
 void testLog()
 {
@@ -39,11 +40,13 @@ void testMpmcQueue()
 
 void testThreadPool()
 {
-    hoshiMNet::base::ThreadPool pool(2, 10);
+    hoshiMNet::base::ThreadPool pool(4, 10);
     pool.start();
 
     std::function<void(int)> task = [](int i)
     {
+        // sleep 1s
+        std::this_thread::sleep_for(std::chrono::seconds(1));
         // print thread
         std::string str = "thread id: " + std::to_string(std::hash<std::thread::id>{}(std::this_thread::get_id())) + ", task: " + std::to_string(i);
         LOG_INFO(str);
@@ -57,12 +60,23 @@ void testThreadPool()
     }
 
     pool.stop();
+    // pool.waitDone();
+}
+
+void testInetAddress()
+{
+    hoshiMNet::net::InetAddress addr("127.0.0.1", 8080);
+    std::string ip = addr.ip();
+    uint16_t port = addr.port();
+    std::string str = "ip: " + ip + ", port: " + std::to_string(port);
+    LOG_INFO(str);
 }
 
 int main()
 {
     // testLog();
     // testMpmcQueue();
-    testThreadPool();
+    // testThreadPool();
+    testInetAddress();
     return 0;
 }

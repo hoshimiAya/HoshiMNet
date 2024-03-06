@@ -4,6 +4,7 @@
 #include <sys/epoll.h>
 
 #include <map>
+#include <vector>
 
 namespace hoshiMNet
 {
@@ -17,11 +18,23 @@ class Epoller
 {
 public:
     using ChannelMap = std::map<int, Channel*>;
+    using ChannelList = std::vector<Channel*>;
+    using EventList = std::vector<struct epoll_event>;
+
+public:
+    Epoller(EventLoop* loop);
+    ~Epoller();
+
+    void poll(int timeoutMs, ChannelList* activeChannels);
+    void getActiveChannels(int eventNum, ChannelList* activeChannels);
+    // void updateChannel(Channel* channel);
+    // void removeChannel(Channel* channel);
 
 private:
     int epollfd_;
-    ChannelMap channels_;
     EventLoop* loop_;
+    ChannelMap channels_;
+    EventList events_;
     
 };
 

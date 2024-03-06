@@ -13,7 +13,7 @@ set(CXX_FLAGS
     -Wpointer-arith
     -Wshadow
     -Wwrite-strings
-    -std=c++11
+    -std=c++14
 )
 
 # set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)

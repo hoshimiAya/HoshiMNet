@@ -31,16 +31,16 @@ public:
     int events() const { return events_; }
     void set_revents(int revents) { revents_ = revents; }
 
-    void enableReading() { events_ |= POLLIN | POLLPRI; }
-    void disableReading() { events_ &= ~(POLLIN | POLLPRI); }
-    void enableWriting() { events_ |= POLLOUT; }
-    void disableWriting() { events_ &= ~POLLOUT; }
+    void enableReading() { events_ |= EPOLLIN | EPOLLPRI; }
+    void disableReading() { events_ &= ~(EPOLLIN | EPOLLPRI); }
+    void enableWriting() { events_ |= EPOLLOUT; }
+    void disableWriting() { events_ &= ~EPOLLOUT; }
 
 private:
     int fd_;
+    EventLoop* loop_;
     int events_;
     int revents_;
-    EventLoop* loop_;
 
     Callback readCallback_;
     Callback writeCallback_;

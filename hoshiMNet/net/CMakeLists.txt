@@ -9,6 +9,7 @@ set(SRCS
 
 add_library(hoshiMNetNet ${SRCS})
 target_link_libraries(hoshiMNetNet pthread)
+target_link_libraries(hoshiMNetNet hoshiMNetBase)
 
 install(TARGETS hoshiMNetNet DESTINATION lib)
 

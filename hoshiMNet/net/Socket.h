@@ -14,6 +14,7 @@ public:
     explicit Socket(int fd);
     ~Socket();
 
+    static Socket create();
     void bind(const InetAddress& addr);
     void listen();
     int accept(InetAddress* peeraddr);
@@ -22,7 +23,7 @@ public:
 
 private:
     int fd_;
-    
+
 };
 
 } // namespace net

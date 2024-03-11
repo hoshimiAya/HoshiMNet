@@ -14,15 +14,16 @@ namespace net
 class InetAddress
 {
 public:
+    InetAddress() = default;
+    ~InetAddress() = default;
     InetAddress(const std::string& ip, uint16_t port);
     explicit InetAddress(const struct sockaddr_in& addr);
-    ~InetAddress();
 
+    void setSockAddr(const struct sockaddr_in& addr);
     std::string ip() const { return ip_; }
     uint16_t port() const { return port_; }
-    void setSockAddr(const struct sockaddr_in& addr) { addr_ = addr; }
     const struct sockaddr* sockAddr() const { return reinterpret_cast<const struct sockaddr*>(&addr_); }
-    int sockAddreLen() const { return sizeof(addr_); }
+    int sockAddreLen() const { return sizeof(struct sockaddr_in); }
 
 private:
     std::string ip_;

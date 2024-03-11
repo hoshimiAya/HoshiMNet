@@ -20,4 +20,9 @@ InetAddress::InetAddress(const struct sockaddr_in& addr)
     , port_(ntohs(addr.sin_port))
     , addr_(addr) {}
 
-InetAddress::~InetAddress() {}
+void InetAddress::setSockAddr(const struct sockaddr_in& addr)
+{
+    addr_ = addr;
+    ip_ = inet_ntoa(addr.sin_addr);
+    port_ = ntohs(addr.sin_port);
+}

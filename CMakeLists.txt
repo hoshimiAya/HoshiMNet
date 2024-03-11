@@ -13,7 +13,7 @@ set(CXX_FLAGS
     -Wpointer-arith
     -Wshadow
     -Wwrite-strings
-    -std=c++11
+    -std=c++14
 )
 
 # set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
@@ -29,3 +29,4 @@ add_subdirectory(hoshiMNet)
 add_executable(app main.cpp)
 
 target_link_libraries(app hoshiMNetBase)
+target_link_libraries(app hoshiMNetNet)

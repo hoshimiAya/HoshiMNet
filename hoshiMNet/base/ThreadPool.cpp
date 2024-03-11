@@ -1,7 +1,5 @@
 #include "ThreadPool.h"
 
-#include <iostream>
-
 using namespace hoshiMNet;
 using namespace hoshiMNet::base;
 
@@ -27,14 +25,18 @@ void ThreadPool::start()
         {
             while (!stop_.load())
             {
-                                Task task;
+                Task task;
                 queue_.pop(task);
                 if (task)
                 {
                     task();
                 }
+                if (queue_.empty())
+                {
+                    cv_.notify_one();
+                }
             }
-                    });
+        });
     }
 }
 
@@ -65,6 +67,5 @@ void ThreadPool::waitDone()
     {
         return queue_.empty();
     });
-    std::cout << "all tasks done" << std::endl;
     stop();
 }

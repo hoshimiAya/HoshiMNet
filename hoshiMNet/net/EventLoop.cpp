@@ -25,3 +25,13 @@ void EventLoop::loop()
         }
     }
 }
+
+void EventLoop::updateChannel(Channel* channel)
+{
+    epoller_->updateChannel(channel);
+}
+
+void EventLoop::removeChannel(Channel* channel)
+{
+    epoller_->removeChannel(channel);
+}

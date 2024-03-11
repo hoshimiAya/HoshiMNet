@@ -2,6 +2,7 @@
 
 #include <unistd.h>
 
+#include "../base/Log.h"
 #include "Channel.h"
 
 using namespace hoshiMNet;
@@ -31,6 +32,33 @@ void Epoller::poll(int timeoutMs, ChannelList* activeChannels)
     {
         // error
     }
+}
+
+void Epoller::updateChannel(Channel* channel)
+{
+    struct epoll_event event = {};
+    event.events = channel->events();
+    event.data.ptr = channel;
+    int fd = channel->fd();
+    if (channels_.find(fd) == channels_.end())
+    {
+        LOG_INFO(std::string("Epoller::updateChannel() EPOLL_CTL_ADD fd = ") + std::to_string(fd));
+        ::epoll_ctl(epollfd_, EPOLL_CTL_ADD, fd, &event);
+        channels_[fd] = channel;
+    }
+    else
+    {
+        LOG_INFO(std::string("Epoller::updateChannel() EPOLL_CTL_MOD fd = ") + std::to_string(fd));
+        ::epoll_ctl(epollfd_, EPOLL_CTL_MOD, fd, &event);
+    }
+}
+
+void Epoller::removeChannel(Channel* channel)
+{
+    int fd = channel->fd();
+    LOG_INFO(std::string("Epoller::removeChannel() fd = ") + std::to_string(fd));
+    ::epoll_ctl(epollfd_, EPOLL_CTL_DEL, fd, 0);
+    channels_.erase(fd);
 }
 
 void Epoller::getActiveChannels(int eventNum, ChannelList* activeChannels)

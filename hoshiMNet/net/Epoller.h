@@ -26,16 +26,18 @@ public:
     ~Epoller();
 
     void poll(int timeoutMs, ChannelList* activeChannels);
+    void updateChannel(Channel* channel);
+    void removeChannel(Channel* channel);
+
+private:
     void getActiveChannels(int eventNum, ChannelList* activeChannels);
-    // void updateChannel(Channel* channel);
-    // void removeChannel(Channel* channel);
 
 private:
     int epollfd_;
     EventLoop* loop_;
     ChannelMap channels_;
     EventList events_;
-    
+
 };
 
 } // namespace net

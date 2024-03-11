@@ -31,10 +31,15 @@ public:
     int events() const { return events_; }
     void set_revents(int revents) { revents_ = revents; }
 
-    void enableReading() { events_ |= EPOLLIN | EPOLLPRI; }
-    void disableReading() { events_ &= ~(EPOLLIN | EPOLLPRI); }
-    void enableWriting() { events_ |= EPOLLOUT; }
-    void disableWriting() { events_ &= ~EPOLLOUT; }
+    void enableReading() { events_ |= EPOLLIN | EPOLLPRI; update(); }
+    void disableReading() { events_ &= ~(EPOLLIN | EPOLLPRI); update(); }
+    void enableWriting() { events_ |= EPOLLOUT; update(); }
+    void disableWriting() { events_ &= ~EPOLLOUT; update(); }
+
+    void remove();
+
+private:
+    void update();
 
 private:
     int fd_;

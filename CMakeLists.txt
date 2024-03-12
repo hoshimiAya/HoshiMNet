@@ -14,6 +14,7 @@ set(CXX_FLAGS
     -Wshadow
     -Wwrite-strings
     -std=c++14
+    -DSPDLOG_ON
 )
 
 # set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)

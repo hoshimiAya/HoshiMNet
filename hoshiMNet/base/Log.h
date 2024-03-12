@@ -3,7 +3,9 @@
 
 #include <string>
 
+#ifdef SPDLOG_ON
 #include <spdlog/spdlog.h>
+#endif // SPDLOG_ON
 
 #include "base/Singleton.h"
 
@@ -25,7 +27,9 @@ private:
     ~Log() {}
     friend class base::Singleton<Log>;
 
+#ifdef SPDLOG_ON
     std::shared_ptr<spdlog::logger> logger_;
+#endif
 };
 
 } // namespace hoshiMNet

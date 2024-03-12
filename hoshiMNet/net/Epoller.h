@@ -38,6 +38,7 @@ private:
     ChannelMap channels_;
     EventList events_;
 
+    static const int DEFAULT_EVENT_SIZE = 16;
 };
 
 } // namespace net

@@ -16,15 +16,21 @@ Channel::~Channel() {}
 
 void Channel::handleEvent()
 {
+    if (revents_ & EPOLLHUP && !(revents_ & EPOLLIN))
+    {
+        LOG_INFO("Channel::handleEvent() EPOLLHUP");
+        if (closeCallback_) closeCallback_();
+    }
+
     if (revents_ & EPOLLERR)
     {
         LOG_INFO("Channel::handleEvent() EPOLLERR");
         if (errorCallback_) errorCallback_();
     }
 
-    if (revents_ & (EPOLLIN | EPOLLPRI | EPOLLRDHUP))
+    if (revents_ & (EPOLLIN | EPOLLPRI))
     {
-        LOG_INFO("Channel::handleEvent() EPOLLIN | EPOLLPRI | EPOLLRDHUP");
+        LOG_INFO("Channel::handleEvent() EPOLLIN | EPOLLPRI");
         if (readCallback_) readCallback_();
     }
 

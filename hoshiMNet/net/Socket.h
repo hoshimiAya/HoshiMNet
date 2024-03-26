@@ -1,6 +1,8 @@
 #ifndef HOSHIMNET_NET_SOCKET_H_
 #define HOSHIMNET_NET_SOCKET_H_
 
+#include <cstddef>
+
 namespace hoshiMNet
 {
 namespace net
@@ -18,6 +20,8 @@ public:
     void bind(const InetAddress& addr);
     void listen();
     int accept(InetAddress* peeraddr);
+    size_t read(void* buf, size_t count);
+    size_t write(const void* buf, size_t count);
 
     int fd() const { return fd_; }
 

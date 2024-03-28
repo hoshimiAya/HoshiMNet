@@ -26,6 +26,7 @@ public:
     TcpConnection(EventLoop* loop, const std::string& id, int connfd);
     ~TcpConnection();
 
+    void send(const std::vector<char>& message);
     void connectEstablished();
     void connectDestroyed();
 
@@ -47,6 +48,10 @@ private:
     std::unique_ptr<Channel> channel_;
     EventLoop* loop_;
     std::string id_;
+
+    std::vector<char> inputBuffer_;
+    std::vector<char> outputBuffer_;
+    static const int DEFAULT_BUFFER_SIZE = 1024 * 1024;
 
     Callback connectionCallback_;
     ReadCallback messageCallback_;

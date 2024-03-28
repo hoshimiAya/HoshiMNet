@@ -30,6 +30,10 @@ public:
 
     void start();
 
+    void setConnectionCallback(const Callback& cb) { connectionCallback_ = cb; }
+    void setMessageCallback(const ReadCallback& cb) { messageCallback_ = cb; }
+    void setWriteCompleteCallback(const Callback& cb) { writeCompleteCallback_ = cb; }
+
 private:
     void newConnection(int connfd, const InetAddress& peerAddr);
     void removeConnection(const TcpConnectionPtr& conn);

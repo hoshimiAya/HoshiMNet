@@ -26,6 +26,7 @@ public:
 
 public:
     TcpServer(EventLoop* loop, const InetAddress& listenAddr);
+    TcpServer(EventLoop* loop, const std::string& ip = "0.0.0.0", uint16_t port = 80);
     ~TcpServer();
 
     void start();

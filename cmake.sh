@@ -26,11 +26,14 @@ echo ""
 cmake ..
 echo -e "\e[1;34m----------------------------------------\e[0m"
 
+# 获取处理器核心数
+CORES=$(nproc)
+
 # 构建项目
 echo ""
 echo -e "\e[1;34mBuilding the project\e[0m"
 echo ""
-make
+make -j$CORES
 echo -e "\e[1;34m----------------------------------------\e[0m"
 
 # 执行app

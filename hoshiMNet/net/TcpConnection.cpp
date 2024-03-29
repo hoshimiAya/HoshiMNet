@@ -15,6 +15,7 @@ TcpConnection::TcpConnection(EventLoop* loop, const std::string& id, int connfd)
     , id_(id)
 {
     inputBuffer_.reserve(DEFAULT_BUFFER_SIZE);
+    inputBuffer_.resize(DEFAULT_BUFFER_SIZE);
     outputBuffer_.reserve(DEFAULT_BUFFER_SIZE);
 
     channel_->setReadCallback(std::bind(&TcpConnection::handleRead, this));
@@ -29,7 +30,7 @@ void TcpConnection::send(const std::vector<char>& message)
 {
     LOG_INFO("TcpConnection::send\n");
     ssize_t sentSize = 0;
-    size_t remaining = outputBuffer_.size();
+    size_t remaining = message.size();
 
     if (outputBuffer_.empty())
     {
@@ -78,18 +79,17 @@ void TcpConnection::handleRead()
 {
     LOG_INFO("TcpConnection::handleRead\n");
 
-    ssize_t n = socket_->read(inputBuffer_.data(), inputBuffer_.size()); // 读取失败，之后修改
+    ssize_t readSize = socket_->read(inputBuffer_.data(), inputBuffer_.size());
 
-    if (n > 0)
+    if (readSize > 0)
     {
-        std::string str = "recv: " + std::string(inputBuffer_.data());
-        LOG_INFO(str.c_str());
+        std::vector<char> data(inputBuffer_.begin(), inputBuffer_.begin() + readSize);
         if (messageCallback_)
         {
-            messageCallback_(shared_from_this(), inputBuffer_);
+            messageCallback_(shared_from_this(), data);
         }
     }
-    else if (n == 0)
+    else if (readSize == 0)
     {
         handleClose();
     }
@@ -105,20 +105,18 @@ void TcpConnection::handleWrite()
 
     if (!outputBuffer_.empty())
     {
-        ssize_t n = socket_->write(outputBuffer_.data(), outputBuffer_.size());
-        if (n < 0)
+        ssize_t sentSize = socket_->write(outputBuffer_.data(), outputBuffer_.size());
+        if (sentSize < 0)
         {
             LOG_ERROR("TcpConnection::handleWrite error\n");
             return;
         }
-        else if (n == 0)
+        else if (sentSize == 0)
         {
             return;
         }
 
-        std::string str = "send: " + std::string(outputBuffer_.begin(), outputBuffer_.begin() + n);
-        LOG_INFO(str.c_str());
-        outputBuffer_.erase(outputBuffer_.begin(), outputBuffer_.begin() + n);
+        outputBuffer_.erase(outputBuffer_.begin(), outputBuffer_.begin() + sentSize);
         if (outputBuffer_.empty())
         {
             channel_->disableWriting();

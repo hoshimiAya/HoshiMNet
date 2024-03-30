@@ -3,8 +3,11 @@ set(SRCS
     Channel.cpp
     Epoller.cpp
     EventLoop.cpp
+    EventLoopThreadPool.cpp
     InetAddress.cpp
     Socket.cpp
+    TcpConnection.cpp
+    TcpServer.cpp
 )
 
 add_library(hoshiMNetNet ${SRCS})

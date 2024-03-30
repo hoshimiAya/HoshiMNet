@@ -62,3 +62,13 @@ int Socket::accept(InetAddress* peeraddr)
     }
     return connectFd;
 }
+
+size_t Socket::read(void* buf, size_t count)
+{
+    return ::read(fd_, buf, count);
+}
+
+size_t Socket::write(const void* buf, size_t count)
+{
+    return ::write(fd_, buf, count);
+}

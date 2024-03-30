@@ -10,7 +10,8 @@ using namespace hoshiMNet::net;
 
 Epoller::Epoller(EventLoop* loop)
     : epollfd_(::epoll_create1(EPOLL_CLOEXEC))
-    , loop_(loop) {}
+    , loop_(loop)
+    , events_(DEFAULT_EVENT_SIZE) {}
 
 Epoller::~Epoller()
 {
@@ -22,15 +23,20 @@ void Epoller::poll(int timeoutMs, ChannelList* activeChannels)
     int eventNum = ::epoll_wait(epollfd_, events_.data(), static_cast<int>(events_.size()), timeoutMs);
     if (eventNum > 0)
     {
+        LOG_INFO(std::string("Epoller::poll() ") + std::to_string(eventNum) + " events happened");
         getActiveChannels(eventNum, activeChannels);
+        if (static_cast<size_t>(eventNum) == events_.size())
+        {
+            events_.resize(events_.size() * 2);
+        }
     }
     else if (eventNum == 0)
     {
-        // nothing happened
+        LOG_INFO("Epoller::poll() nothing happened");
     }
     else
     {
-        // error
+        LOG_ERROR("Epoller::poll() error");
     }
 }
 

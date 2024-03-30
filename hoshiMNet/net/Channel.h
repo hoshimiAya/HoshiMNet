@@ -35,6 +35,7 @@ public:
     void disableReading() { events_ &= ~(EPOLLIN | EPOLLPRI); update(); }
     void enableWriting() { events_ |= EPOLLOUT; update(); }
     void disableWriting() { events_ &= ~EPOLLOUT; update(); }
+    void disableAll() { events_ = 0; update(); }
 
     void remove();
 

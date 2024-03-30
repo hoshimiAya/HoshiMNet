@@ -13,6 +13,8 @@
 #include "hoshiMNet/net/EventLoop.h"
 #include "hoshiMNet/net/Channel.h"
 #include "hoshiMNet/net/Epoller.h"
+#include "hoshiMNet/net/TcpConnection.h"
+#include "hoshiMNet/net/TcpServer.h"
 
 void testLog()
 {
@@ -129,6 +131,32 @@ void testAcceptor()
     LOG_INFO("loop exit");
 }
 
+void testTcpServer()
+{
+    hoshiMNet::net::EventLoop loop;
+    hoshiMNet::net::InetAddress addr("0.0.0.0", 17150);
+    hoshiMNet::net::TcpServer server(&loop, addr);
+    server.setConnectionCallback([](const hoshiMNet::net::TcpConnectionPtr& conn)
+    {
+        std::string str = "new connection: " + conn->id();
+        LOG_INFO(str);
+    });
+    server.setMessageCallback([](const hoshiMNet::net::TcpConnectionPtr& conn, const std::vector<char>& buf)
+    {
+        std::string str = "receive new data from: " + conn->id() + ", data: " + std::string(buf.data());
+        LOG_INFO(str);
+
+        conn->send(buf);
+    });
+    server.setWriteCompleteCallback([](const hoshiMNet::net::TcpConnectionPtr& conn)
+    {
+        std::string str = "write complete: " + conn->id();
+        LOG_INFO(str);
+    });
+    server.start();
+    loop.loop();
+}
+
 int main()
 {
     // testLog();
@@ -136,6 +164,7 @@ int main()
     // testThreadPool();
     // testInetAddress();
     // testSocket();
-    testAcceptor();
+    // testAcceptor();
+    testTcpServer();
     return 0;
 }

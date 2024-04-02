@@ -63,6 +63,11 @@ int Socket::accept(InetAddress* peeraddr)
     return connectFd;
 }
 
+int Socket::connect(const InetAddress& addr)
+{
+    return ::connect(fd_, addr.sockAddr(), addr.sockAddreLen());
+}
+
 size_t Socket::read(void* buf, size_t count)
 {
     return ::read(fd_, buf, count);

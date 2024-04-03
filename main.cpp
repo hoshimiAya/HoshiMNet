@@ -3,6 +3,7 @@
 #include <condition_variable>
 #include <thread>
 #include <iostream>
+#include <iomanip>
 
 #include "hoshiMNet/base/Log.h"
 #include "hoshiMNet/base/MpmcQueue.h"
@@ -15,6 +16,7 @@
 #include "hoshiMNet/net/Epoller.h"
 #include "hoshiMNet/net/TcpConnection.h"
 #include "hoshiMNet/net/TcpServer.h"
+#include "hoshiMNet/net/TcpClient.h"
 
 void testLog()
 {
@@ -134,8 +136,7 @@ void testAcceptor()
 void testTcpServer()
 {
     hoshiMNet::net::EventLoop loop;
-    hoshiMNet::net::InetAddress addr("0.0.0.0", 17150);
-    hoshiMNet::net::TcpServer server(&loop, addr);
+    hoshiMNet::net::TcpServer server(&loop, "0.0.0.0", 17150);
     server.setConnectionCallback([](const hoshiMNet::net::TcpConnectionPtr& conn)
     {
         std::string str = "new connection: " + conn->id();
@@ -143,10 +144,15 @@ void testTcpServer()
     });
     server.setMessageCallback([](const hoshiMNet::net::TcpConnectionPtr& conn, const std::vector<char>& buf)
     {
-        std::string str = "receive new data from: " + conn->id() + ", data: " + std::string(buf.data());
+        // std::string str = "receive new data from: " + conn->id() + ", data: " + std::string(buf.data());
+        std::stringstream ss;
+        for (char c : buf) {
+            ss << std::hex << std::setw(2) << std::setfill('0') << std::uppercase << static_cast<int>(static_cast<unsigned char>(c));
+        }
+        std::string str = "receive new data from: " + conn->id() + ", length: " + std::to_string(buf.size()) + ", data: " + ss.str();
         LOG_INFO(str);
 
-        conn->send(buf);
+        // conn->send(buf);
     });
     server.setWriteCompleteCallback([](const hoshiMNet::net::TcpConnectionPtr& conn)
     {
@@ -154,6 +160,31 @@ void testTcpServer()
         LOG_INFO(str);
     });
     server.start();
+    loop.loop();
+}
+
+void testTcpClient()
+{
+    hoshiMNet::net::EventLoop loop;
+    hoshiMNet::net::TcpClient client(&loop, "10.12.100.17", 17150);
+    client.setConnectionCallback([](const hoshiMNet::net::TcpConnectionPtr& conn)
+    {
+        std::string str = "new connection: " + conn->id();
+        LOG_INFO(str);
+    });
+    client.setMessageCallback([](const hoshiMNet::net::TcpConnectionPtr& conn, const std::vector<char>& buf)
+    {
+        std::string str = "receive new data from: " + conn->id() + ", data: " + std::string(buf.data());
+        LOG_INFO(str);
+
+        conn->send(buf);
+    });
+    client.setWriteCompleteCallback([](const hoshiMNet::net::TcpConnectionPtr& conn)
+    {
+        std::string str = "write complete: " + conn->id();
+        LOG_INFO(str);
+    });
+    client.connect();
     loop.loop();
 }
 
@@ -165,6 +196,7 @@ int main()
     // testInetAddress();
     // testSocket();
     // testAcceptor();
-    testTcpServer();
+    // testTcpServer();
+    testTcpClient();
     return 0;
 }

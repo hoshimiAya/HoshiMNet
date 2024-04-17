@@ -77,3 +77,11 @@ size_t Socket::write(const void* buf, size_t count)
 {
     return ::write(fd_, buf, count);
 }
+
+void Socket::shutdownWrite()
+{
+    if (::shutdown(fd_, SHUT_WR) < 0)
+    {
+        throw std::runtime_error("shutdown error");
+    }
+}

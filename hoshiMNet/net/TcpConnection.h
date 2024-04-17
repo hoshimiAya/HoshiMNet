@@ -27,6 +27,7 @@ public:
     ~TcpConnection();
 
     void send(const std::vector<char>& message);
+    void shutdown();
     void connectEstablished();
     void connectDestroyed();
 

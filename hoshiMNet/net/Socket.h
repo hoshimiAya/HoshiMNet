@@ -23,6 +23,7 @@ public:
     int connect(const InetAddress& addr);
     size_t read(void* buf, size_t count);
     size_t write(const void* buf, size_t count);
+    void shutdownWrite();
 
     int fd() const { return fd_; }
 

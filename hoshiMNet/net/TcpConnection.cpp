@@ -57,6 +57,12 @@ void TcpConnection::send(const std::vector<char>& message)
     }
 }
 
+void TcpConnection::shutdown()
+{
+    LOG_INFO("TcpConnection::shutdown\n");
+    socket_->shutdownWrite();
+}
+
 void TcpConnection::connectEstablished()
 {
     LOG_INFO("TcpConnection::connectEstablished\n");

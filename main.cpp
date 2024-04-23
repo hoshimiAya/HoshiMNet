@@ -144,20 +144,14 @@ void testTcpServer()
     });
     server.setMessageCallback([](const hoshiMNet::net::TcpConnectionPtr& conn, const std::vector<char>& buf)
     {
-        // std::string str = "receive new data from: " + conn->id() + ", data: " + std::string(buf.data());
-        std::stringstream ss;
-        for (char c : buf) {
-            ss << std::hex << std::setw(2) << std::setfill('0') << std::uppercase << static_cast<int>(static_cast<unsigned char>(c));
-        }
-        std::string str = "receive new data from: " + conn->id() + ", length: " + std::to_string(buf.size()) + ", data: " + ss.str();
-        LOG_INFO(str);
-
-        // conn->send(buf);
+        std::string str = "receive new data from: " + conn->id() + ", data: " + std::string(buf.data());
+        conn->send(buf);
     });
     server.setWriteCompleteCallback([](const hoshiMNet::net::TcpConnectionPtr& conn)
     {
         std::string str = "write complete: " + conn->id();
         LOG_INFO(str);
+        // conn->shutdown();
     });
     server.start();
     loop.loop();

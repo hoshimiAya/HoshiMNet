@@ -31,6 +31,8 @@ public:
 
     void start();
 
+    void setThreadNum(int numThreads) { threadPool_->setThreadNum(numThreads); }
+    void setThreadInitCallback(const ThreadInitCallback& cb) { threadInitCallback_ = cb; }
     void setConnectionCallback(const Callback& cb) { connectionCallback_ = cb; }
     void setMessageCallback(const ReadCallback& cb) { messageCallback_ = cb; }
     void setWriteCompleteCallback(const Callback& cb) { writeCompleteCallback_ = cb; }
@@ -38,6 +40,7 @@ public:
 private:
     void newConnection(int connfd, const InetAddress& peerAddr);
     void removeConnection(const TcpConnectionPtr& conn);
+    void removeConnectionInLoop(const TcpConnectionPtr& conn);
 
 private:
     EventLoop* loop_;
@@ -50,6 +53,8 @@ private:
     Callback connectionCallback_;
     ReadCallback messageCallback_;
     Callback writeCompleteCallback_;
+
+    int connId_;
 };
 
 } // namespace net

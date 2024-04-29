@@ -36,6 +36,7 @@ public:
     void setWriteCompleteCallback(const Callback& cb) { writeCompleteCallback_ = cb; }
     void setCloseCallback(const Callback& cb) { closeCallback_ = cb; }
 
+    EventLoop* getLoop() const { return loop_; }
     const std::string& id() const { return id_; }
 
 private:

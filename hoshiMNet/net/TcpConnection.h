@@ -1,7 +1,9 @@
 #ifndef HOSHIMNET_NET_TCPCONNECTION_H_
 #define HOSHIMNET_NET_TCPCONNECTION_H_
 
+#include <functional>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace hoshiMNet

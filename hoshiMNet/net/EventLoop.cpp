@@ -3,8 +3,6 @@
 #include <sys/eventfd.h>
 #include <unistd.h>
 
-#include <thread>
-
 #include "../base/Log.h"
 #include "Channel.h"
 #include "Epoller.h"

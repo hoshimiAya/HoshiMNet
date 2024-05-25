@@ -1,7 +1,9 @@
 #ifndef HOSHIMNET_NET_TCPCONNECTION_H_
 #define HOSHIMNET_NET_TCPCONNECTION_H_
 
+#include <functional>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace hoshiMNet
@@ -27,6 +29,7 @@ public:
     ~TcpConnection();
 
     void send(const std::vector<char>& message);
+    void shutdown();
     void connectEstablished();
     void connectDestroyed();
 
@@ -35,6 +38,7 @@ public:
     void setWriteCompleteCallback(const Callback& cb) { writeCompleteCallback_ = cb; }
     void setCloseCallback(const Callback& cb) { closeCallback_ = cb; }
 
+    EventLoop* getLoop() const { return loop_; }
     const std::string& id() const { return id_; }
 
 private:

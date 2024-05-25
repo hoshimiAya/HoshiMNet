@@ -63,6 +63,11 @@ int Socket::accept(InetAddress* peeraddr)
     return connectFd;
 }
 
+int Socket::connect(const InetAddress& addr)
+{
+    return ::connect(fd_, addr.sockAddr(), addr.sockAddreLen());
+}
+
 size_t Socket::read(void* buf, size_t count)
 {
     return ::read(fd_, buf, count);
@@ -71,4 +76,12 @@ size_t Socket::read(void* buf, size_t count)
 size_t Socket::write(const void* buf, size_t count)
 {
     return ::write(fd_, buf, count);
+}
+
+void Socket::shutdownWrite()
+{
+    if (::shutdown(fd_, SHUT_WR) < 0)
+    {
+        throw std::runtime_error("shutdown error");
+    }
 }

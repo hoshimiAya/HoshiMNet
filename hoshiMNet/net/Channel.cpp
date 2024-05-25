@@ -28,16 +28,16 @@ void Channel::handleEvent()
         if (errorCallback_) errorCallback_();
     }
 
-    if (revents_ & (EPOLLIN | EPOLLPRI))
-    {
-        LOG_INFO("Channel::handleEvent() EPOLLIN | EPOLLPRI");
-        if (readCallback_) readCallback_();
-    }
-
     if (revents_ & EPOLLOUT)
     {
         LOG_INFO("Channel::handleEvent() EPOLLOUT");
         if (writeCallback_) writeCallback_();
+    }
+
+    if (revents_ & (EPOLLIN | EPOLLPRI))
+    {
+        LOG_INFO("Channel::handleEvent() EPOLLIN | EPOLLPRI");
+        if (readCallback_) readCallback_();
     }
 }
 

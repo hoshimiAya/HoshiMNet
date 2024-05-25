@@ -6,6 +6,7 @@ set(SRCS
     EventLoopThreadPool.cpp
     InetAddress.cpp
     Socket.cpp
+    TcpClient.cpp
     TcpConnection.cpp
     TcpServer.cpp
 )

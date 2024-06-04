@@ -15,9 +15,11 @@ public:
         static T instance;
         return instance;
     }
+
 protected:
     Singleton() {}
     virtual ~Singleton() {}
+
 private:
     Singleton(const Singleton&) = delete;
     Singleton(const Singleton&&) = delete;
@@ -25,15 +27,16 @@ private:
     Singleton& operator=(const Singleton&&) = delete;
 };
 
-// test
-// class Test : public Singleton<Test>
-// {
-// friend class Singleton<Test>;
+/* test
+class Test : public Singleton<Test>
+{
+friend class Singleton<Test>;
 
-// private:
-//     Test() {}
-//     ~Test() {}
-// };
+private:
+    Test() {}
+    ~Test() {}
+};
+*/
 
 } // namespace base
 } // namespace hoshiMNet

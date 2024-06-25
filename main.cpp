@@ -20,10 +20,10 @@
 
 void testLog()
 {
-    hoshiMNet::Log::instance().log("Hello, spdlog!");
-    LOG_INFO("Hello, spdlog!");
-    LOG_WARN("Hello, spdlog!");
-    LOG_ERROR("Hello, spdlog!");
+    hoshiMNet::Log::instance().log("Hello, log!");
+    LOG_INFO("Hello, log!");
+    LOG_WARN("Hello, log!");
+    LOG_ERROR("Hello, log!");
 }
 
 void testMpmcQueue()
